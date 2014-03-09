@@ -17,6 +17,7 @@ import java.util.Date;
  */
 public class App
 {
+	static final String FILE_PATH = "C:/cygwin64/home/Michael/dev/ParallelRayTracer/log.csv";
 
 	public static void main(String[] args)
 	{
@@ -50,19 +51,19 @@ public class App
 		}
 	}
 
-	public static void readFile()
+	public static String readFile()
 	{
 		BufferedReader br = null;
-
+		String fileContents = "";
 		try
 		{
 			String sCurrentLine;
 
-			br = new BufferedReader(new FileReader("testing.txt"));
+			br = new BufferedReader(new FileReader(FILE_PATH));
 
 			while ((sCurrentLine = br.readLine()) != null)
 			{
-				System.out.println(sCurrentLine);
+				fileContents += sCurrentLine + "\n";
 			}
 
 		}
@@ -84,6 +85,7 @@ public class App
 				ex.printStackTrace();
 			}
 		}
+		return fileContents;
 	}
 
 	private static void write(Command command, Date time)
@@ -91,9 +93,9 @@ public class App
 		try
 		{
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			String content = command +", " + dateFormat.format(time) + "\n";
+			String content = readFile() + command.name() +", " + dateFormat.format(time) + "\n";
 
-			File file = new File("C:/cygwin64/home/Michael/dev/log.csv");
+			File file = new File(FILE_PATH);
 
 			// if file doesnt exists, then create it
 			if (!file.exists())

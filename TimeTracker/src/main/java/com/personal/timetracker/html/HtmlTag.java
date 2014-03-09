@@ -20,4 +20,9 @@ public enum HtmlTag
 	ROW("tr"),
 	COL("td");
 	
+	String name;
+	HtmlTag(String name)
+	{
+		this.name = name;
+	}
 }

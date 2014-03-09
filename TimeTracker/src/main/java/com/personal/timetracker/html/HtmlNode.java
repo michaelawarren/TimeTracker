@@ -12,5 +12,10 @@ package com.personal.timetracker.html;
  */
 public class HtmlNode
 {
+	HtmlTag htmlTag;
 	
+	HtmlNode(HtmlTag htmlTag)
+	{
+		this.htmlTag = htmlTag;
+	}
 }
