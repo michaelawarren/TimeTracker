@@ -13,7 +13,6 @@ package com.personal.timetracker;
 public enum Command {
     START,
     END,
-	LOG_TIME,
-    BUILD_REPORT,
-    VIEW_LOG;
+	VIEW_DAY,
+    BUILD_REPORT;
 }

@@ -8,8 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Hello world!
@@ -22,7 +24,7 @@ public class App
 	public static void main(String[] args)
 	{
 		System.out.println("Welcome to Time tracker!");
-		if (args.length == 1)
+		if (args.length >= 1)
 		{
 			Command command = null;
 			System.out.println(args[0]);
@@ -35,26 +37,49 @@ public class App
 				System.out.println("Invalid Command");
 				return;
 			}
-
+			
+			String message = "";
+			final Date now = Calendar.getInstance().getTime();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date today = new Date();
+			try
+			{
+				today = formatter.parse(formatter.format(today));
+			}
+			catch(Exception ex)
+			{
+			}
+			
 			switch (command)
 			{
 				case START:
+					if (args.length > 1)
+						message = args[1];
+					else
+					{
+						System.out.println("Start command requires a task.");
+						return;
+					}
 				case END:
-					write(command, Calendar.getInstance().getTime());
+					write(command, now, message);
 					break;
-				case LOG_TIME:
+				case VIEW_DAY:
+					hoursForRange(today, now, null);
+					break;
 				case BUILD_REPORT:
-				case VIEW_LOG:
+					Date lastReportDate = new Date();
+					buildReport(lastReportDate);
+					break;
 				default:
 					throw new UnsupportedOperationException();
 			}
 		}
 	}
 
-	public static String readFile()
+	public static List<String> readLogFile()
 	{
 		BufferedReader br = null;
-		String fileContents = "";
+		List<String> fileContents = new ArrayList<String>();
 		try
 		{
 			String sCurrentLine;
@@ -63,7 +88,7 @@ public class App
 
 			while ((sCurrentLine = br.readLine()) != null)
 			{
-				fileContents += sCurrentLine + "\n";
+				fileContents.add(sCurrentLine);
 			}
 
 		}
@@ -88,12 +113,24 @@ public class App
 		return fileContents;
 	}
 
-	private static void write(Command command, Date time)
+	private static void write(Command command, Date time, String task)
 	{
 		try
 		{
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			String content = readFile() + command.name() +", " + dateFormat.format(time) + "\n";
+			List<String> content = readLogFile();
+			
+			switch(command)
+			{
+				case START:
+					content.add(task +"," + dateFormat.format(time));
+					break;
+				case END:
+					String last = content.get(content.size() - 1);
+					last += "," + dateFormat.format(time);
+					content.set(content.size() - 1, last);
+					break;
+			}
 
 			File file = new File(FILE_PATH);
 
@@ -105,7 +142,11 @@ public class App
 
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(content);
+			for (String string : content)
+			{
+				bw.write(string + "\n");
+			}
+			
 			bw.close();
 
 			System.out.println("Done");
@@ -115,5 +156,13 @@ public class App
 		{
 			e.printStackTrace();
 		}
+	}
+	private static void hoursForRange(Date start, Date end, List<String> times)
+	{
+		System.out.println(start.toString() + " - " + end.toString());
+	}
+	private static void buildReport(Date lastReportDate)
+	{
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }
