@@ -20,6 +20,7 @@ import java.util.List;
 public class App
 {
 	static final String FILE_PATH = "C:/cygwin64/home/Michael/dev/ParallelRayTracer/log.csv";
+	static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
 	public static void main(String[] args)
 	{
@@ -37,7 +38,7 @@ public class App
 				System.out.println("Invalid Command");
 				return;
 			}
-			
+
 			String message = "";
 			final Date now = Calendar.getInstance().getTime();
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -46,15 +47,17 @@ public class App
 			{
 				today = formatter.parse(formatter.format(today));
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 			}
-			
+
 			switch (command)
 			{
 				case START:
 					if (args.length > 1)
+					{
 						message = args[1];
+					}
 					else
 					{
 						System.out.println("Start command requires a task.");
@@ -64,7 +67,7 @@ public class App
 					write(command, now, message);
 					break;
 				case VIEW_DAY:
-					hoursForRange(today, now, null);
+					System.out.println(hoursForRange(today, now, readLogFile()));
 					break;
 				case BUILD_REPORT:
 					Date lastReportDate = new Date();
@@ -117,13 +120,13 @@ public class App
 	{
 		try
 		{
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 			List<String> content = readLogFile();
-			
-			switch(command)
+
+			switch (command)
 			{
 				case START:
-					content.add(task +"," + dateFormat.format(time));
+					content.add(task + "," + dateFormat.format(time));
 					break;
 				case END:
 					String last = content.get(content.size() - 1);
@@ -146,7 +149,7 @@ public class App
 			{
 				bw.write(string + "\n");
 			}
-			
+
 			bw.close();
 
 			System.out.println("Done");
@@ -157,9 +160,35 @@ public class App
 			e.printStackTrace();
 		}
 	}
-	private static void hoursForRange(Date start, Date end, List<String> times)
+	private static double hoursForRange(Date rangeStart, Date rangeEnd, List<String> times)
 	{
-		System.out.println(start.toString() + " - " + end.toString());
+		System.out.println(rangeStart.toString() + " - " + rangeEnd.toString());
+		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+		double elaspedTime = 0d;
+		for (String string : times)
+		{
+			try
+			{
+				String[] split = string.split(",");
+				if (split.length == 1 || split.length > 3)
+					continue;
+				Date logStart = formatter.parse(split[1]);
+				Date logEnd = null;
+				if (split.length == 2 && times.indexOf(string) == times.size() - 1)
+					logEnd = rangeEnd;
+				else
+					logEnd = formatter.parse(split[2]);
+				if ((logStart.after(rangeStart) || logStart.equals(rangeStart)) 
+					&& logStart.before(rangeEnd))
+				{
+					elaspedTime += logEnd.getTime() - logStart.getTime();
+				}
+			}
+			catch (Exception e)
+			{
+			}
+		}
+		return elaspedTime / (1000d * 3600);
 	}
 	private static void buildReport(Date lastReportDate)
 	{
