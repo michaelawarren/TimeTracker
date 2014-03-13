@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.personal.timetracker;
 
 /**
  *
  * @author Michael
  */
-public enum Command {
-    START,
-    END,
+public enum Command
+{
+	START,
+	END,
 	VIEW_DAY,
-    VIEW_REPORT;
+	VIEW_REPORT;
 }
