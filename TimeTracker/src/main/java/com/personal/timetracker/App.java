@@ -19,7 +19,8 @@ import java.util.List;
  */
 public class App
 {
-	static final String FILE_PATH = "C:/cygwin64/home/Michael/dev/ParallelRayTracer/log.csv";
+	static final String LOG_FILE_PATH = "C:/cygwin64/home/Michael/dev/ParallelRayTracer/log.csv";
+	static final String REPORT_FILE_PATH = "C:\\Users\\Michael\\SkyDrive\\School\\CS499\\report.xlsx";
 	static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
 	public static void main(String[] args)
@@ -69,9 +70,9 @@ public class App
 				case VIEW_DAY:
 					System.out.println(hoursForRange(today, now, readLogFile()));
 					break;
-				case BUILD_REPORT:
+				case VIEW_REPORT:
 					Date lastReportDate = new Date();
-					buildReport(lastReportDate);
+					viewReport();
 					break;
 				default:
 					throw new UnsupportedOperationException();
@@ -87,7 +88,7 @@ public class App
 		{
 			String sCurrentLine;
 
-			br = new BufferedReader(new FileReader(FILE_PATH));
+			br = new BufferedReader(new FileReader(LOG_FILE_PATH));
 
 			while ((sCurrentLine = br.readLine()) != null)
 			{
@@ -135,7 +136,7 @@ public class App
 					break;
 			}
 
-			File file = new File(FILE_PATH);
+			File file = new File(LOG_FILE_PATH);
 
 			// if file doesnt exists, then create it
 			if (!file.exists())
@@ -171,14 +172,20 @@ public class App
 			{
 				String[] split = string.split(",");
 				if (split.length == 1 || split.length > 3)
+				{
 					continue;
+				}
 				Date logStart = formatter.parse(split[1]);
 				Date logEnd = null;
 				if (split.length == 2 && times.indexOf(string) == times.size() - 1)
+				{
 					logEnd = rangeEnd;
+				}
 				else
+				{
 					logEnd = formatter.parse(split[2]);
-				if ((logStart.after(rangeStart) || logStart.equals(rangeStart)) 
+				}
+				if ((logStart.after(rangeStart) || logStart.equals(rangeStart))
 					&& logStart.before(rangeEnd))
 				{
 					elaspedTime += logEnd.getTime() - logStart.getTime();
@@ -190,8 +197,24 @@ public class App
 		}
 		return elaspedTime / (1000d * 3600);
 	}
-	private static void buildReport(Date lastReportDate)
+	private static void viewReport()
 	{
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		try
+		{
+			while (true)
+			{
+				File f = new File(REPORT_FILE_PATH);
+				if (f.canWrite())
+				{
+					Runtime.getRuntime().exec("C:\\Program Files\\Microsoft Office\\Office15\\EXCEL.EXE " + REPORT_FILE_PATH);
+					System.out.println("Success!!");
+					return;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
 	}
 }

@@ -14,5 +14,5 @@ public enum Command {
     START,
     END,
 	VIEW_DAY,
-    BUILD_REPORT;
+    VIEW_REPORT;
 }
