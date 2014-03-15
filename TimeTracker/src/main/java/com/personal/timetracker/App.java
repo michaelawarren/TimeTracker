@@ -71,7 +71,6 @@ public class App
 					System.out.println(hoursForRange(today, now, readLogFile()));
 					break;
 				case VIEW_REPORT:
-					Date lastReportDate = new Date();
 					viewReport();
 					break;
 				default:
