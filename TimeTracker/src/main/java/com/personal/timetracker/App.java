@@ -162,7 +162,7 @@ public class App
 	}
 	private static double hoursForRange(Date rangeStart, Date rangeEnd, List<String> times)
 	{
-//		System.out.println(rangeStart.toString() + " - " + rangeEnd.toString());
+		System.out.println(rangeStart.toString() + " - " + rangeEnd.toString());
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		double elaspedTime = 0d;
 		for (String string : times)
