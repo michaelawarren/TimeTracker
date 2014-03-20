@@ -20,7 +20,7 @@ import java.util.List;
 public class App
 {
 	static final String LOG_FILE_PATH = "C:/cygwin64/home/Michael/dev/ParallelRayTracer/log.csv";
-	static final String REPORT_FILE_PATH = "C:\\Users\\Michael\\SkyDrive\\School\\CS499\\report.xlsx";
+	static final String REPORT_FILE_PATH = "C:/cygwin64/home/Michael/dev/ParallelRayTracer/report.xlsx";
 	static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
 	public static void main(String[] args)
